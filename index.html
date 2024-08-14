@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drag and Drop Login</title>
+    <title>Firebase Drag and Drop Login</title>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
 </head>
 <body>
 
     <h2>Login</h2>
 
     <form id="loginForm">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" required><br><br>
+        <label for="username">Username (Email):</label><br>
+        <input type="email" id="username" name="username" required><br><br>
 
         <label for="password">Password:</label><br>
         <div id="passwordField" style="border: 1px solid #000; width: 200px; height: 30px;"></div><br>
@@ -26,7 +28,27 @@
         <li draggable="true" ondragstart="drag(event)" id="password3">letmein!</li>
     </ul>
 
-    <script>
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCYMCd1fZqBCKL88DsD6AO8vUenu6c9B6M",
+    authDomain: "drag-login.firebaseapp.com",
+    projectId: "drag-login",
+    storageBucket: "drag-login.appspot.com",
+    messagingSenderId: "1057193447963",
+    appId: "1:1057193447963:web:fef424d53d84fcf92e1ebe"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
+
+        <script>
         // Function to handle drag and drop
         function drag(event) {
             event.dataTransfer.setData("text", event.target.id);
@@ -50,11 +72,21 @@
         // Handle form submission
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault();
-            var username = document.getElementById("username").value;
+            var email = document.getElementById("username").value;
             var password = document.getElementById("passwordField").innerText;
 
-            if (username && password) {
-                alert("Login Successful!\nUsername: " + username + "\nPassword: " + password);
+            if (email && password) {
+                firebase.auth().signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // Signed in
+                        var user = userCredential.user;
+                        alert("Login Successful! Welcome, " + user.email);
+                    })
+                    .catch((error) => {
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        alert("Error: " + errorMessage);
+                    });
             } else {
                 alert("Please enter a username and drag and drop a password.");
             }
