@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Login</title>
+</head>
+<body>
+
+    <h2>Login</h2>
+
+    <form id="loginForm">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <div id="passwordField" style="border: 1px solid #000; width: 200px; height: 30px;"></div><br>
+
+        <input type="submit" value="Login">
+    </form>
+
+    <h3>Drag and Drop Password</h3>
+    <ul id="passwordList">
+        <li draggable="true" ondragstart="drag(event)" id="password1">password123</li>
+        <li draggable="true" ondragstart="drag(event)" id="password2">admin2024</li>
+        <li draggable="true" ondragstart="drag(event)" id="password3">letmein!</li>
+    </ul>
+
+    <script>
+        // Function to handle drag and drop
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text");
+            var passwordField = document.getElementById("passwordField");
+            passwordField.innerText = document.getElementById(data).innerText;
+        }
+
+        // Attach the drop event to the password field
+        document.getElementById("passwordField").addEventListener("dragover", allowDrop);
+        document.getElementById("passwordField").addEventListener("drop", drop);
+
+        // Handle form submission
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("passwordField").innerText;
+
+            if (username && password) {
+                alert("Login Successful!\nUsername: " + username + "\nPassword: " + password);
+            } else {
+                alert("Please enter a username and drag and drop a password.");
+            }
+        });
+    </script>
+
+</body>
+</html>
